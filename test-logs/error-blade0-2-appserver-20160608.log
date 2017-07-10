@@ -1,0 +1,132 @@
+[2016-06-08 00:01:14.283 GMT] ERROR PipelineCallServlet|1612783430|Sites-mysite07_us-Site|Blog-Show|PipelineCall|UYpyajuCXp7g_kQKJ6yeT2LQeC6RjX5vfqZLCNMg3i5umezcPxWcur8XBzSF1X0LItwguMXndCc1TsZBNYcYZg== system.TemplateScriptError  Sites-mysite07_us-Site STOREFRONT UYpyajuCXp7g_kQKJ6yeT2LQeC6RjX5vfqZLCNMg3i5umezcPxWcur8XBzSF1X0LItwguMXndCc1TsZBNYcYZg== oTUOLFdXYEjIAgAK-0-00 2255849427626281984  TypeError: Cannot read property "products" from null ([Template:search/components/categorycarousel:${cat.products}]#1)
+	at [Template:search/components/categorycarousel:${cat.products}]:1
+
+
+System Information
+------------------
+RequestID: oTUOLFdXYEjIAgAK-0-00
+SessionType: STOREFRONT
+SessionID: UYpyajuCXp7g_kQKJ6yeT2LQeC6RjX5vfqZLCNMg3i5umezcPxWcur8XBzSF1X0LItwguMXndCc1TsZBNYcYZg==
+ServerName: localhost
+ServerPort: 10163
+
+Request Information
+-------------------
+URI: /servlet/Beehive/Sites-mysite07_us-Site/default/Blog-Show
+Method: GET
+PathInfo: /Sites-mysite07_us-Site/default/Blog-Show
+QueryString: url=%2Fmysite07_us%2Fproducts%2Fbehind-hike%2F
+Remote Address: 157.55.39.182
+
+Request Parameters
+------------------
+url=/mysite07_us/products/behind-hike/
+Stack trace <f727e7a9b74859a6b01d4df7a3f10da6>
+org.mozilla.javascript.WrappedException: Wrapped com.demandware.beehive.core.capi.common.NullArgumentException: Null Arguments in ProductEvaluator.ctor(Domain, Product, ProductLineItem) ([Template:product/components/promotions:${dw.campaign.PromotionMgr.activeCustomerPromotions.getProductPromotions(pdict.promo_product)}]#1)
+	at org.mozilla.javascript.Context.throwAsScriptRuntimeEx(Context.java:1754)
+	at org.mozilla.javascript.MemberBox.invoke(MemberBox.java:233)
+	at org.mozilla.javascript.NativeJavaMethod.call(NativeJavaMethod.java:250)
+Caused by: com.demandware.beehive.core.capi.common.NullArgumentException: Null Arguments in ProductEvaluator.ctor(Domain, Product, ProductLineItem)
+	at com.demandware.beehive.core.capi.common.NullArgumentException.assertArgs(NullArgumentException.java:48)
+	at com.demandware.component.transaction.promotion.spec.ProductEvaluator.<init>(ProductEvaluator.java:120)
+	... 176 more
+[2016-06-08 00:01:37.804 GMT] ERROR PipelineCallServlet|1634951624|Sites-mysite09_us-Site|Search-Show|OnRequest|XFUYk4-LSJBgtS82x1YFmsLlrFGZ8OFQ9JdGIlhHYlKrPNFZnyBI7CqvvrDrwzbP51JoSW0z0Q8sfpkolbLMMA== system.core  Sites-mysite09_us-Site STOREFRONT XFUYk4-LSJBgtS82x1YFmsLlrFGZ8OFQ9JdGIlhHYlKrPNFZnyBI7CqvvrDrwzbP51JoSW0z0Q8sfpkolbLMMA== AjYTLVdXYGHIAgAK-0-00 1620896729551471616  An infinite loop was detected within the Redirect URL configuration. Caused by request URL /Sites-mysite09_us-Site/default/Search-Show?cgid=discover-nyc-pop-up.
+
+System Information
+------------------
+RequestID: AjYTLVdXYGHIAgAK-0-00
+SessionType: STOREFRONT
+SessionID: XFUYk4-LSJBgtS82x1YFmsLlrFGZ8OFQ9JdGIlhHYlKrPNFZnyBI7CqvvrDrwzbP51JoSW0z0Q8sfpkolbLMMA==
+ServerName: localhost
+ServerPort: 10163
+
+Request Information
+-------------------
+URI: /servlet/Beehive/Sites-mysite09_us-Site/default/Search-Show
+Method: GET
+PathInfo: /Sites-mysite09_us-Site/default/Search-Show
+QueryString: cgid=discover-nyc-pop-up
+Remote Address: 52.90.132.142
+
+Request Parameters
+------------------
+cgid=discover-nyc-pop-up
+dwfrm_billing_billingAddress_addressFields_firstName=Nina
+malformed=Seriously? You just
+dump multiline query parameters
+straight to the log file without any
+good serialization. Thanks.
+shipping-address1=410 Miracle Mile
+POST /on/demandware.store/Sites-mysite10_us-Site/default/Cart-AddProduct?format=ajax HTTP/1.1
+Host: www.mysite10.com
+Connection: keep-alive
+Content-Length: 174
+Accept: */*
+O
+Stack trace <ref:f727e7a9b74859a6b01d4df7a3f10da6>
+[2016-06-08 00:30:17.329 GMT] ERROR PipelineCallServlet|1976451315|Sites-mysite11_us-Site|__Analytics-Tracking|OnRequest|1YxaShMLgyQMklwt9D9Mr558TJwOQqHVNhkQ2Hap_iZDik9eV-6JdbiHNCqB2tVxGTmXb0TyVHycE9f1ySsriQ== system  Sites-mysite11_us-Site STOREFRONT 1YxaShMLgyQMklwt9D9Mr558TJwOQqHVNhkQ2Hap_iZDik9eV-6JdbiHNCqB2tVxGTmXb0TyVHycE9f1ySsriQ== mDVZ5VdXZxnIAgAK-0-00 4608063840402226176  Cannot process a request parameter because it has multiple values. Instead will use the default value [{}]. Parameter [{}]. Values [{}]. Default value [{}]
+[2016-06-08 00:01:38.373 GMT] ERROR PipelineCallServlet|1898828772|Sites-mysite11_us-Site|Product-Detail|PipelineCall|aE_qQrA_Co47bU0fzgfLjteXI-TKha_jYcmikq3doOYy2wnrilLHWqi6KjZgj57TcZSZAGFOkvbJ8JkjgMBDhg== system.TemplateScriptError  Sites-mysite11_us-Site STOREFRONT aE_qQrA_Co47bU0fzgfLjteXI-TKha_jYcmikq3doOYy2wnrilLHWqi6KjZgj57TcZSZAGFOkvbJ8JkjgMBDhg== XDcqLVdXYGLIAgAK-0-00 6026786501288783872  TypeError: Cannot read property "onlineFrom" from null ( dw.util ); ... }]#8)
+	at [Template:product/productpagedynamiccache:${importPackage( dw.util ); ... }]:8
+
+
+System Information
+------------------
+RequestID: XDcqLVdXYGLIAgAK-0-00
+SessionType: STOREFRONT
+SessionID: aE_qQrA_Co47bU0fzgfLjteXI-TKha_jYcmikq3doOYy2wnrilLHWqi6KjZgj57TcZSZAGFOkvbJ8JkjgMBDhg==
+ServerName: localhost
+ServerPort: 10163
+
+Request Information
+-------------------
+URI: /servlet/Beehive/Sites-mysite11_us-Site/default/Product-Detail/C1793844563
+Method: GET
+PathInfo: /Sites-mysite11_us-Site/default/Product-Detail/C1793844563
+Remote Address: 66.249.69.177
+
+Request Parameters
+------------------
+[2016-06-08 09:20:16.175 GMT] ERROR JobThread|65994117|Export - Orders|Export-Orders system.core  Sites-mysite04_europe-Site JOB f5b8943dcd7144e5a316589f00f5b8943dcd 87d1fea7715d53dc850a402efa 6684119655367943168  core.evalScript (org.mozilla.javascript.EcmaError: TypeError: Cannot call method "addMessage" of null ([Pipeline:Export:${...=(CurrentWorkflowComponentInstance.addMessage("Starting to export "+OrdersToExportCount+" orders.",'INFO'))}]#1))
+
+System Information
+------------------
+RequestID: 87d1fea7715d53dc850a402efa
+SessionType: JOB
+SessionID: f5b8943dcd7144e5a316589f00f5b8943dcd
+ServerName: 
+ServerPort: -1
+
+Request Information
+-------------------
+URI: 
+Method: 
+PathInfo: 
+QueryString: 
+Remote User: 
+
+Request Parameters
+------------------
+[2016-06-06 00:00:54.096 GMT] ERROR OnChangeIndexer-thread-1 com.demandware.component.search3.index.SearchSvcRequestFactory  - - - - 2172177384246719488  Outdated order found. Loaded OCA 297560769, Index Request OCA 297560770 for order (W1028846963, bdXcYiaagY3YYaaadcEFVsFRb8)
+[2016-07-12 05:05:51.710 GMT] ERROR PipelineCallServlet|270318840|Sites-Site|ViewOrder_52-Dispatch|PipelineCall|1ZMspDPCWtnbJlw3p4fJq0ou9fImvJOOcRPO_A02AH6rrbc5VtVLkwj6HsH0oP1flOrZJLgS3seEdQNKHaqPqw== system.core  Sites-Site BUSINESSMGR 1ZMspDPCWtnbJlw3p4fJq0ou9fImvJOOcRPO_A02AH6rrbc5VtVLkwj6HsH0oP1flOrZJLgS3seEdQNKHaqPqw== qVbl9leEeq_IAgAK-0-00 3321423093179570176  core.ISML_ISPRINTError (161, java.lang.NullPointerException(null))
+
+System Information
+------------------
+RequestID: qVbl9leEeq_IAgAK-0-00
+SessionType: STOREFRONT
+SessionID: 1ZMspDPCWtnbJlw3p4fJq0ou9fImvJOOcRPO_A02AH6rrbc5VtVLkwj6HsH0oP1flOrZJLgS3seEdQNKHaqPqw==
+ServerName: localhost
+ServerPort: 10161
+
+Request Information
+-------------------
+URI: /servlet/Beehive/Sites-Site/default/ViewOrder_52-Dispatch
+Method: GET
+PathInfo: /Sites-Site/default/ViewOrder_52-Dispatch
+QueryString: LineItemGroupUUID=bdy72iaag01XYaaadnHNJA3bIk&OrderID=deEGwiaag0AboaaadnrNJA3cIk&packageDetail=packageDetail
+Remote Address: 172.127.160.253
+
+Request Parameters
+------------------
+LineItemGroupUUID=bdy72iaag01XYaaadnHNJA3bIk
+packageDetail=packageDetail
+OrderID=deEGwiaag0AboaaadnrNJA3cIk

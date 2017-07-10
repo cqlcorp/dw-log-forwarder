@@ -1,0 +1,8 @@
+[2016-07-01 17:24:01.404 GMT] Pipeline usage violation: ERROR: top level execution of system pipeline in custom site PIPELINE: bc_impex/ProcessABTestStatisticsImport SITE: Sites-mysite12_us-Site
+[2016-07-01 17:39:38.132 GMT] WSDL file: /remote/f_aako/aako/aako_stg/sharedata/cartridges/develop_A/int_svs/cartridge/webreferences/StoreValue_GiftCardOnline.wsdl, Binding: {http://service.svsxml.svs.com}SVSXMLWaySoapBinding, Style: document
+[2016-06-16 00:05:24.286 GMT] API Method dw.util.Map.values() has been changed in a newer API Version. Please consider updating.
+[2016-06-16 05:51:03.698 GMT] PipelineDictionary usage violation: INFO: intended unchecked pipeline dictionary access PIPELET: com.demandware.component.foundation.pipelet.common.RemoveDictionaryValue
+[2016-06-16 05:51:03.701 GMT] PipelineDictionary usage violation: ERROR: unknown property value class PIPELET: com.demandware.site.bm.pipelet.redirect.URLRedirects KEY: Site
+[2016-06-16 00:38:52.808 GMT] PipelineDictionary usage violation: TEMPLATE:www_store/default/account/payment/paymentinstrumentlist KEY: bctext2
+[2016-06-16 09:54:05.492 GMT] Read from ResettableIterator buffer in Stores-Find 
+[2016-06-16 12:18:37.976 GMT] SessionDictionary usage violation: 'com.demandware.beehive.foundation.util.URL' placed into session.

@@ -1,0 +1,16 @@
+{
+  "logShippersConnString": "Driver={SQL Server Native Client 11.0};Server=(local)\\sql2016;Database=DwLogShippers;Trusted_Connection=yes;",
+  "encPasswordPassphrase": "YOUR_PASSPHRASE_HERE",
+  "output": {
+    "outputFolder": "C:\\temp\\dw-log-forwarder\\output",
+    "logstashUrl": "https://foo:bar@localhost:9999"
+  },
+  "archiveQueueDir": "C:\\temp\\dw-log-forwarder\\queue",
+  "maxDayQueueProcessSeconds": 180,
+  "appLogFolder": "C:\\temp\\dw-log-forwarder\\logs",
+  "diagnostics": {
+    "diagnosticsEmails": ["your.email@example.com"],
+    "fromEmail": "smtp.from.email@example.com",
+    "smtpServer": "yoursmtp.example.com"
+  }
+}

@@ -1,0 +1,4 @@
+[2016-07-05 00:00:00.041 GMT] SCRIPT_METHOD:dw.system.Site@getCurrencyCode() in request/site Sites-mysite08_us-Site/top pipeline __Analytics-Tracking/pipelet Script/script www_store:util/CheckLocaleCurrency.ds:45, 1 time(s)
+[2016-07-05 00:07:02.059 GMT] DECISION_NODE:Cart in request/site Sites-mysite07_us-Site/top pipeline Cart-AddCoupon/decision node, 4 time(s)
+[2016-07-05 13:20:56.701 GMT] Type 'dw.order.Order' not allowed as attribute value for a session. in request/site Sites-mysite07_eu-Site/top pipeline GlobalCollect-HML_RTB_Return/pipelet Assign, 2 time(s)
+[2016-07-12 08:15:04.756 GMT] SCRIPT_METHOD:dw.catalog.Product@isAvailable() in job/job Responsys - Product Feed/top pipeline ResponsysFeeds-Product/pipelet Script/script www_jobs:responsys/responsysExportProducts.ds:67/script www_jobs:responsys/responsysExportProducts.ds:121/script www_jobs:responsys/responsysExportProducts.ds:163, 11457 time(s)
