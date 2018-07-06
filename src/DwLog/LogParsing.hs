@@ -10,12 +10,20 @@ import           Text.Parsec.Text
 
 import           DwLog
 
+doParsecParse :: Parser DwLog -> (Integer, Integer, Text) -> Either DetailedParseError DwLog
+doParsecParse parser (logNum, lineNum, log') =
+  case runP parser () lineInfo log' of
+    Left err -> Left $ newDetailedParseError err log'
+    Right ok -> Right ok
+  where lineInfo = "log #" ++ show logNum ++ " (starting at line #" ++ show lineNum ++ " in stream)"
+
+
 --------------------------------------------------------------------------------
 -- customLogParser targets files of the format
 --   customerror-bladeX-Y-appserver-YYYYMMDD.log
 --------------------------------------------------------------------------------
-customLogParser :: DwLogMeta -> Parser DwLog
-customLogParser meta = do
+customLogParser :: DwLogMeta -> DwLogParser
+customLogParser meta = DwLogParser $ doParsecParse $ do
   discard $ many endOfLine
   timestamp' <- timestampParser
   discard $ space
@@ -47,8 +55,8 @@ customLogParser meta = do
 -- dwSystemLogParser targets files of the format
 --   error-bladeX-Y-appserver-YYYYMMDD.log
 --------------------------------------------------------------------------------
-dwSystemLogParser :: DwLogMeta -> Parser DwLog
-dwSystemLogParser meta = do
+dwSystemLogParser :: DwLogMeta -> DwLogParser
+dwSystemLogParser meta = DwLogParser $ doParsecParse $ do
   discard $ many endOfLine
   timestamp' <- timestampParser
   discard $ space
@@ -227,8 +235,8 @@ stackTraceParser =
 -- quotaLogParser targets files of the format
 --   quota-bladeX-Y-appserver-YYYYMMDD.log
 --------------------------------------------------------------------------------
-quotaLogParser :: DwLogMeta -> Parser DwLog
-quotaLogParser meta = do
+quotaLogParser :: DwLogMeta -> DwLogParser
+quotaLogParser meta = DwLogParser $ doParsecParse $ do
   discard $ many endOfLine
   timestamp' <- timestampParser
   discard $ space
@@ -309,8 +317,8 @@ quotaInfoParser = do
 -- apiLogParser targets files of the format
 --   api-bladeX-Y-appserver-YYYYMMDD.log
 --------------------------------------------------------------------------------
-apiLogParser :: DwLogMeta -> Parser DwLog
-apiLogParser meta = do
+apiLogParser :: DwLogMeta -> DwLogParser
+apiLogParser meta = DwLogParser $ doParsecParse $ do
   discard $ many endOfLine
   timestamp' <- timestampParser
   discard $ space
@@ -358,8 +366,8 @@ apiLogParser meta = do
 -- apiDeprecationLogParser targets files of the format
 --   api-deprecation-bladeX-Y-appserver-YYYYMMDD.log
 --------------------------------------------------------------------------------
-apiDeprecationLogParser :: DwLogMeta -> Parser DwLog
-apiDeprecationLogParser meta = do
+apiDeprecationLogParser :: DwLogMeta -> DwLogParser
+apiDeprecationLogParser meta = DwLogParser $ doParsecParse $ do
   discard $ many endOfLine
   timestamp' <- timestampParser
   discard $ space

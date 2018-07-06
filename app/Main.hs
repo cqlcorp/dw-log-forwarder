@@ -26,7 +26,6 @@ import           System.Log.Handler         (setFormatter)
 import           System.Log.Handler.Simple
 import           System.Log.Logger
 import           Text.Parsec
-import           Text.Parsec.Text
 import           Text.Regex.TDFA
 import qualified Text.Regex.TDFA.Text       as RGXT
 
@@ -246,7 +245,7 @@ instance ToJSON DetailedParseErrorJSON where
         , "environment" .= i_environment inst
         ]
 
-getParserForFile :: DwLogMeta -> Maybe (Parser DwLog, Text)
+getParserForFile :: DwLogMeta -> Maybe (DwLogParser, Text)
 getParserForFile logMeta
   | "api-deprecation-" `T.isPrefixOf` fn = Just (apiDeprecationLogParser logMeta, "apiDeprecationLogParser")
   | "api-" `T.isPrefixOf` fn = Just (apiLogParser logMeta, "apiLogParser")

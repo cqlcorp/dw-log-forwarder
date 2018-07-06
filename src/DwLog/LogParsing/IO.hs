@@ -6,13 +6,12 @@ import qualified Data.ByteString.Lazy       as BSL
 import           Data.List                  (isSuffixOf)
 import qualified Data.Text.Lazy.Encoding    as LTE
 import qualified Data.Text.Lazy.IO          as LTIO
-import           Text.Parsec.Text
 import qualified Text.Regex.TDFA.Text       as RGXT
 
 import           DwLog
 import           DwLog.LogParsing.Streaming
 
-parseFromFile :: Parser DwLog -> [RGXT.Regex] -> String -> IO [Either DetailedParseError DwLog]
+parseFromFile :: DwLogParser -> [RGXT.Regex] -> String -> IO [Either DetailedParseError DwLog]
 parseFromFile p omissionRegexes path = do
   input <- if isSuffixOf ".gz" path
              then do

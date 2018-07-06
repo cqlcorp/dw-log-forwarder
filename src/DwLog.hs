@@ -126,6 +126,27 @@ emptyApiInfo = ApiInfo
   }
 
 --------------------------------------------------------------------------------
+-- DwLogParser abstracts the idea of running parsers and was created in the
+-- move from Parsec to AttoParsec. The tuple param is (logNum, lineNum, log')
+-- for more detailed error messages.
+--------------------------------------------------------------------------------
+data DwLogParser = DwLogParser {
+  doParse :: (Integer, Integer, Text) -> Either DetailedParseError DwLog
+  }
+
+--------------------------------------------------------------------------------
+-- A wrapper for ParseError which retains the originally parsed log text
+--------------------------------------------------------------------------------
+data DetailedParseError = DetailedParseError Text Text
+
+newDetailedParseError :: Show a => a -> Text -> DetailedParseError
+newDetailedParseError err = DetailedParseError (T.pack (show err))
+
+instance Show DetailedParseError where
+  show (DetailedParseError err log') =
+    unlines [ show err, "Original Log", "------------", show log' ]
+
+--------------------------------------------------------------------------------
 -- JSON encoding
 --------------------------------------------------------------------------------
 instance ToJSON LogType where
