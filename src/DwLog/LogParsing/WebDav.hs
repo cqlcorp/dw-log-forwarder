@@ -3,14 +3,17 @@ module DwLog.LogParsing.WebDav
   ( WebDavEnvironment(..)
   , DwLogFolder(..)
   , ServerLogFile(..)
+  , getWebDavAuth
   , getFolderContents
   , filterFolderContents
   , tailLogFile
   , downloadFile
   ) where
 
+import           Data.Aeson
 import qualified Control.Exception             as E
 import           Control.Lens
+import           Control.Monad
 import qualified Data.ByteString.Char8         as BS8
 import qualified Data.ByteString.Lazy.Internal as BSLI
 import           Data.Either
@@ -40,6 +43,29 @@ data ServerLogFile = ServerLogFile
   { filePath              :: Text
   , utcServerLastModified :: LocalTime
   } deriving (Show)
+
+data OAuth2Response = OAuth2Response { accessToken :: Text } deriving (Show)
+
+instance FromJSON OAuth2Response where
+  parseJSON (Object v) = OAuth2Response <$> v .: "access_token"
+  parseJSON _ = mzero
+
+--------------------------------------------------------------------------------
+-- getWebDavAuth now assumes the username and password represent the client_id and client_secret to
+-- authenticate against account.demandware.com.
+-- NOTE: If you are using basic auth against a Business Manager user account, use this instead:
+-- return $ basicAuth (TE.encodeUtf8 $ username) (TE.encodeUtf8 $ password)
+--------------------------------------------------------------------------------
+getWebDavAuth :: Text -> Text -> IO (Either Text Auth)
+getWebDavAuth username password = do
+  let opts = defaults & auth ?~ basicAuth (TE.encodeUtf8 $ username) (TE.encodeUtf8 $ password)
+  let url = "https://account.demandware.com/dwsso/oauth2/access_token"
+  r <- postWith opts url ["grant_type" := TE.encodeUtf8 (T.pack "client_credentials")] >>= asJSON
+  case r ^. responseStatus . statusCode of
+    200 -> do
+      let accessToken' = accessToken (r ^. responseBody)
+      return $ Right $ oauth2Bearer (TE.encodeUtf8 accessToken')
+    _ -> return $ Left $ T.concat ["Could not get access_token for client_id ", username, ". Response status: ", T.pack $ show (r ^. responseStatus)]
 
 --------------------------------------------------------------------------------
 -- Given a webdav folder, this lists the contents. It's based off a strict

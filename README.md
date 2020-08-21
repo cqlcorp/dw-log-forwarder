@@ -5,6 +5,13 @@ This application pulls down Demandware logs over WebDAV, parses them into a frie
 
 It is intended to be run on a schedule of some small interval continuously, say, every five minutes.
 
+Breaking Changes in Authorization
+---------------------------------
+
+Previous versions of this tool assumed the username and password mapped to a Business Manager user. The current version
+assumes these map to `client_id` and `client_secret`, and instead of using a Business Manager account, we use an API
+client defined in account.demandware.com.
+
 Building
 -----------
 

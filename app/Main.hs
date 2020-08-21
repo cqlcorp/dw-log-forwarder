@@ -12,7 +12,6 @@ import           Data.List
 import           Data.Maybe
 import           Data.Text                  (Text)
 import qualified Data.Text                  as T
-import qualified Data.Text.Encoding         as TE
 import           Data.Time
 import           LogShipperDb
 import           Network.Connection         (TLSSettings (..))
@@ -68,41 +67,40 @@ configureLogging config = do
 
   updateGlobalLogger rootLoggerName (setLevel INFO . addHandler emailer . addHandler logFile)
 
-getWebDavAuth :: Text -> Text -> IO Auth
-getWebDavAuth username password =
-  return $ basicAuth (TE.encodeUtf8 $ username) (TE.encodeUtf8 $ password)
-
 doInstance :: Config -> DbInstance -> IO ()
 doInstance config inst = do
   let domain = i_domain inst; username' = i_username inst; password' = i_password inst; instanceID = i_instanceID inst
 
-  webdavAuth' <- getWebDavAuth username' password'
-  let env = WebDavEnvironment domain webdavAuth'
+  webdavAuthResult <- getWebDavAuth username' password'
+  case webdavAuthResult of
+    Left err -> errorM rootLoggerName $ T.unpack err
+    Right webdavAuth' -> do
+      let env = WebDavEnvironment domain webdavAuth'
 
-  omissionRegexes <- getLogOmissionRegexes config instanceID
+      omissionRegexes <- getLogOmissionRegexes config instanceID
 
-  tryFetchQueuedArchives config inst env
-  tryProcessQueuedDayFiles config inst omissionRegexes
+      tryFetchQueuedArchives config inst env
+      tryProcessQueuedDayFiles config inst omissionRegexes
 
-  infoM rootLoggerName $ "Querying logs from instance: " ++ T.unpack domain
-  rootLogFiles <- getFolderContents env Root
-  utcToday <- getUtcToday
+      infoM rootLoggerName $ "Querying logs from instance: " ++ T.unpack domain
+      rootLogFiles <- getFolderContents env Root
+      utcToday <- getUtcToday
 
-  -- the deprecation folder goes back months, so let's just query yesterday and today
-  depLogFiles <- filterFolderContents env Deprecation (keepPast24Hrs utcToday)
+      -- the deprecation folder goes back months, so let's just query yesterday and today
+      depLogFiles <- filterFolderContents env Deprecation (keepPast24Hrs utcToday)
 
-  case concat <$> sequence [rootLogFiles, depLogFiles] of
-    Left err -> errorM rootLoggerName $ "Error fetching log files from " ++ T.unpack domain ++ "\n" ++ T.unpack err
-    Right logFiles -> do
-      knownLogFiles <- getLogFilesForInstance config instanceID
-      let findKnownLogFile lf = find ((==) lf . lf_filePath) knownLogFiles
-      let dropUnmodified = filter modified
-            where modified (srvlf, dblf) =
-                    case dblf of
-                      Nothing -> True
-                      Just lf -> utcServerLastModified srvlf > lf_utcServerLastModified lf
-      let zippedLogFiles = dropUnmodified $ map (\lf -> (lf, findKnownLogFile (filePath lf))) logFiles
-      forM_ zippedLogFiles $ doLogFile config inst env omissionRegexes
+      case concat <$> sequence [rootLogFiles, depLogFiles] of
+        Left err -> errorM rootLoggerName $ "Error fetching log files from " ++ T.unpack domain ++ "\n" ++ T.unpack err
+        Right logFiles -> do
+          knownLogFiles <- getLogFilesForInstance config instanceID
+          let findKnownLogFile lf = find ((==) lf . lf_filePath) knownLogFiles
+          let dropUnmodified = filter modified
+                where modified (srvlf, dblf) =
+                        case dblf of
+                          Nothing -> True
+                          Just lf -> utcServerLastModified srvlf > lf_utcServerLastModified lf
+          let zippedLogFiles = dropUnmodified $ map (\lf -> (lf, findKnownLogFile (filePath lf))) logFiles
+          forM_ zippedLogFiles $ doLogFile config inst env omissionRegexes
 
 doLogFile :: Config -> DbInstance -> WebDavEnvironment -> [RGXT.Regex] -> (ServerLogFile, Maybe DbLogFile) -> IO ()
 doLogFile config inst env omissionRegexes (serverLogFile, dbLogFile) = do
