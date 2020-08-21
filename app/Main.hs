@@ -70,32 +70,37 @@ configureLogging config = do
 doInstance :: Config -> DbInstance -> IO ()
 doInstance config inst = do
   let domain = i_domain inst; username' = i_username inst; password' = i_password inst; instanceID = i_instanceID inst
-  let env = WebDavEnvironment domain username' password'
 
-  omissionRegexes <- getLogOmissionRegexes config instanceID
+  webdavAuthResult <- getWebDavAuth username' password'
+  case webdavAuthResult of
+    Left err -> errorM rootLoggerName $ T.unpack err
+    Right webdavAuth' -> do
+      let env = WebDavEnvironment domain webdavAuth'
 
-  tryFetchQueuedArchives config inst env
-  tryProcessQueuedDayFiles config inst omissionRegexes
+      omissionRegexes <- getLogOmissionRegexes config instanceID
 
-  infoM rootLoggerName $ "Querying logs from instance: " ++ T.unpack domain
-  rootLogFiles <- getFolderContents env Root
-  utcToday <- getUtcToday
+      tryFetchQueuedArchives config inst env
+      tryProcessQueuedDayFiles config inst omissionRegexes
 
-  -- the deprecation folder goes back months, so let's just query yesterday and today
-  depLogFiles <- filterFolderContents env Deprecation (keepPast24Hrs utcToday)
+      infoM rootLoggerName $ "Querying logs from instance: " ++ T.unpack domain
+      rootLogFiles <- getFolderContents env Root
+      utcToday <- getUtcToday
 
-  case concat <$> sequence [rootLogFiles, depLogFiles] of
-    Left err -> errorM rootLoggerName $ "Error fetching log files from " ++ T.unpack domain ++ "\n" ++ T.unpack err
-    Right logFiles -> do
-      knownLogFiles <- getLogFilesForInstance config instanceID
-      let findKnownLogFile lf = find ((==) lf . lf_filePath) knownLogFiles
-      let dropUnmodified = filter modified
-            where modified (srvlf, dblf) =
-                    case dblf of
-                      Nothing -> True
-                      Just lf -> utcServerLastModified srvlf > lf_utcServerLastModified lf
-      let zippedLogFiles = dropUnmodified $ map (\lf -> (lf, findKnownLogFile (filePath lf))) logFiles
-      forM_ zippedLogFiles $ doLogFile config inst env omissionRegexes
+      -- the deprecation folder goes back months, so let's just query yesterday and today
+      depLogFiles <- filterFolderContents env Deprecation (keepPast24Hrs utcToday)
+
+      case concat <$> sequence [rootLogFiles, depLogFiles] of
+        Left err -> errorM rootLoggerName $ "Error fetching log files from " ++ T.unpack domain ++ "\n" ++ T.unpack err
+        Right logFiles -> do
+          knownLogFiles <- getLogFilesForInstance config instanceID
+          let findKnownLogFile lf = find ((==) lf . lf_filePath) knownLogFiles
+          let dropUnmodified = filter modified
+                where modified (srvlf, dblf) =
+                        case dblf of
+                          Nothing -> True
+                          Just lf -> utcServerLastModified srvlf > lf_utcServerLastModified lf
+          let zippedLogFiles = dropUnmodified $ map (\lf -> (lf, findKnownLogFile (filePath lf))) logFiles
+          forM_ zippedLogFiles $ doLogFile config inst env omissionRegexes
 
 doLogFile :: Config -> DbInstance -> WebDavEnvironment -> [RGXT.Regex] -> (ServerLogFile, Maybe DbLogFile) -> IO ()
 doLogFile config inst env omissionRegexes (serverLogFile, dbLogFile) = do
