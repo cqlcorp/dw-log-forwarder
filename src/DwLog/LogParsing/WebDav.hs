@@ -27,8 +27,7 @@ import           Text.Parsec.Text
 
 data WebDavEnvironment = WebDavEnvironment
   { server   :: Text
-  , username :: Text
-  , password :: Text
+  , webdavAuth :: Auth
   }
 
 data DwLogFolder
@@ -49,7 +48,7 @@ data ServerLogFile = ServerLogFile
 --------------------------------------------------------------------------------
 getFolderContents :: WebDavEnvironment -> DwLogFolder -> IO (Either Text [ServerLogFile])
 getFolderContents env folder = do
-  let opts = defaults & auth ?~ basicAuth (TE.encodeUtf8 $ username env) (TE.encodeUtf8 $ password env)
+  let opts = defaults & auth ?~ webdavAuth env
   let url = T.unpack $ dwLogFolder env folder
   r <- getWith opts url
   case r ^. responseStatus . statusCode of
@@ -119,7 +118,7 @@ tailLogFile env sinceBytes filePath' = do
   let
     range = BS8.pack $ concat ["bytes=", show sinceBytes, "-"]
     opts = defaults
-      & auth ?~ basicAuth (TE.encodeUtf8 $ username env) (TE.encodeUtf8 $ password env)
+      & auth ?~ webdavAuth env
       & header "Range" .~ [range]
   let url = concat ["https://", T.unpack $ server env, T.unpack filePath']
   resp <- (Just <$> getWith opts url) `E.catch` handler
@@ -147,7 +146,7 @@ downloadFile :: WebDavEnvironment -> Text -> IO (Either Text BSLI.ByteString)
 downloadFile env filePath' = do
   let
     opts = defaults
-      & auth ?~ basicAuth (TE.encodeUtf8 $ username env) (TE.encodeUtf8 $ password env)
+      & auth ?~ webdavAuth env
   let url = concat ["https://", T.unpack $ server env, T.unpack filePath']
   resp <- getWith opts url
   return $ Right $ resp ^. responseBody

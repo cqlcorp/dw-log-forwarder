@@ -12,6 +12,7 @@ import           Data.List
 import           Data.Maybe
 import           Data.Text                  (Text)
 import qualified Data.Text                  as T
+import qualified Data.Text.Encoding         as TE
 import           Data.Time
 import           LogShipperDb
 import           Network.Connection         (TLSSettings (..))
@@ -67,10 +68,16 @@ configureLogging config = do
 
   updateGlobalLogger rootLoggerName (setLevel INFO . addHandler emailer . addHandler logFile)
 
+getWebDavAuth :: Text -> Text -> IO Auth
+getWebDavAuth username password =
+  return $ basicAuth (TE.encodeUtf8 $ username) (TE.encodeUtf8 $ password)
+
 doInstance :: Config -> DbInstance -> IO ()
 doInstance config inst = do
   let domain = i_domain inst; username' = i_username inst; password' = i_password inst; instanceID = i_instanceID inst
-  let env = WebDavEnvironment domain username' password'
+
+  webdavAuth' <- getWebDavAuth username' password'
+  let env = WebDavEnvironment domain webdavAuth'
 
   omissionRegexes <- getLogOmissionRegexes config instanceID
 
