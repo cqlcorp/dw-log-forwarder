@@ -20,28 +20,37 @@ customLogParser meta = do
   timestamp' <- timestampParser
   discard $ space
   level' <- tillSpace
-  servlet' <- tillPipe
-  discard $ tillPipe
 
-  let logBasics = (emptyDwLog meta timestamp' CustomLog) { level = level', servlet = servlet' }
+  isSuppressed <- lookAheadOneOf ["RepeatedMessageSuppressingFilter-Thread"]
 
-  logInnards <-
-    if servlet' == "JobThread"
-      then do
-        jobName' <- tillPipe
-        pipeline' <- tillSpace
-        return logBasics { pipeline = pipeline' , jobName = Just jobName' }
-      else do
-        site' <- siteParser (char '|')
-        pipeline' <- tillPipe
-        caller' <- tillPipe
-        sessionID' <- tillSpace
-        return logBasics { site = site' , pipeline = pipeline' , caller = caller' , sessionID = sessionID' }
+  logInnards' <- if isSuppressed
+    then do
+      return (emptyDwLog meta timestamp' CustomLog) { level = level' }
+    else do
+      servlet' <- tillPipe
+      discard $ tillPipe
+
+      let logBasics = (emptyDwLog meta timestamp' CustomLog) { level = level', servlet = servlet' }
+
+      logInnards <-
+        if servlet' == "JobThread"
+          then do
+            jobName' <- tillPipe
+            pipeline' <- tillSpace
+            return logBasics { pipeline = pipeline' , jobName = Just jobName' }
+          else do
+            site' <- siteParser (char '|')
+            pipeline' <- tillPipe
+            caller' <- tillPipe
+            sessionID' <- tillSpace
+            return logBasics { site = site' , pipeline = pipeline' , caller = caller' , sessionID = sessionID' }
+
+      return logInnards
 
   logger' <- tillSpace
   discard $ spaces
   message' <- manyTill anyChar endOfLog
-  return logInnards { logger = logger' , message = T.strip $ T.pack message' }
+  return logInnards' { logger = logger' , message = T.strip $ T.pack message' }
 
 --------------------------------------------------------------------------------
 -- dwSystemLogParser targets files of the format
