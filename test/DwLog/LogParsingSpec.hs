@@ -104,6 +104,78 @@ spec = do
         , QuotaInfoField Nothing
         , DeprecationInfoField Nothing
         ]
+      , [ Timestamp $ LocalTime (fromGregorian 2020 9 18) (TimeOfDay 0 13 30.419)
+        , Client dummyClient
+        , Filename "file1"
+        , LogTypeField CustomLog
+        , Level "ERROR"
+        , Servlet ""
+        , Site ""
+        , Pipeline ""
+        , Caller ""
+        , SessionID ""
+        , SessionType Nothing
+        , RequestID Nothing
+        , Logger "RepeatedMessageSuppressingFilter-Thread"
+        , Message "custom.promotions []  The following message was generated more than 10 times within the last 180 seconds. It will be suppressed for 180 seconds: Too many online \"promotional\" content assets cause performance problems. Count: 32"
+        , SystemInfo []
+        , RequestInfo []
+        , RequestParams []
+        , MalformedRequestParams Nothing
+        , StrayHttpHeaders Nothing
+        , StackTraceField Nothing
+        , JobName Nothing
+        , QuotaInfoField Nothing
+        , DeprecationInfoField Nothing
+        ]
+      , [ Timestamp $ LocalTime (fromGregorian 2020 9 18) (TimeOfDay 8 28 15.028)
+        , Client dummyClient
+        , Filename "file1"
+        , LogTypeField CustomLog
+        , Level "ERROR"
+        , Servlet ""
+        , Site ""
+        , Pipeline ""
+        , Caller ""
+        , SessionID ""
+        , SessionType Nothing
+        , RequestID Nothing
+        , Logger "RepeatedMessageSuppressingFilter-Thread"
+        , Message "custom.isml []  The following message was generated more than 10 times within the last 180 seconds. It will be suppressed for 180 seconds: ReferenceError: \"Product\" is not defined. ([Template:util/affirmpromo:${Product.primaryCategory}]#1)\n  at [Template:util/affirmpromo:${Product.primaryCategory}]:1"
+        , SystemInfo []
+        , RequestInfo []
+        , RequestParams []
+        , MalformedRequestParams Nothing
+        , StrayHttpHeaders Nothing
+        , StackTraceField Nothing
+        , JobName Nothing
+        , QuotaInfoField Nothing
+        , DeprecationInfoField Nothing
+        ]
+      , [ Timestamp $ LocalTime (fromGregorian 2020 9 18) (TimeOfDay 12 52 4.704)
+        , Client dummyClient
+        , Filename "file1"
+        , LogTypeField CustomLog
+        , Level "WARN"
+        , Servlet ""
+        , Site ""
+        , Pipeline ""
+        , Caller ""
+        , SessionID ""
+        , SessionType Nothing
+        , RequestID Nothing
+        , Logger "RepeatedMessageSuppressingFilter-Thread"
+        , Message "custom []  The following message was generated more than 10 times within the last 180 seconds. It will be suppressed for 180 seconds: Job [Marketing Cloud Product Feed] - It is likely that the localeCurrencyMap or listPriceDefault pref is set incorrectly, pointing at a sale pricebook for locale: null"
+        , SystemInfo []
+        , RequestInfo []
+        , RequestParams []
+        , MalformedRequestParams Nothing
+        , StrayHttpHeaders Nothing
+        , StackTraceField Nothing
+        , JobName Nothing
+        , QuotaInfoField Nothing
+        , DeprecationInfoField Nothing
+        ]
       ]
 
   describe "DW error log entries" $ do
